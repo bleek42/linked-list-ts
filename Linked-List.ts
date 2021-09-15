@@ -62,5 +62,62 @@ export default class LinkedList<T> implements ILinkedList<T> {
 		return this.traverse().length;
 	}
 
-	public search(comparator: (value: T) => boolean): Node<T> {}
+	public search(comparator: (value: T) => boolean): Node<T> | null {
+		const getNextNode = (node: Node<T>): Node<T> | null => {
+			if (comparator(node.value)) {
+				return node;
+			}
+			return node.next ? getNextNode(node.next) : null;
+		};
+		return this.head ? getNextNode(this.head) : null;
+	}
 }
+
+interface INodeValue {
+	id: number;
+	name: string;
+	dob: Date;
+	password: string;
+	email: string;
+	isAdmin: boolean;
+}
+
+class NodeValue<T> implements INodeValue {
+	public readonly id: number;
+	public readonly name: string;
+	public readonly dob: Date;
+	public password: string;
+	public email: string;
+	public isAdmin: boolean;
+
+	public constructor(
+		id: number,
+		name: string,
+		dob: Date,
+		password: string,
+		email: string,
+		isAdmin: boolean,
+	) {
+		this.id = id;
+		this.name = name;
+		this.dob = dob;
+		this.password = password;
+		this.email = email;
+		this.isAdmin = isAdmin;
+	}
+}
+
+const linkedList = new LinkedList<INodeValue>();
+
+const userBrandon = new NodeValue(
+	42,
+	"Brandon Leek",
+	new Date("1992-03-31"),
+	"passwerd123",
+	"brandon.leek@somestartup.com",
+	true,
+);
+
+linkedList.insertFirst(userBrandon);
+
+console.log(linkedList.traverse());
